@@ -13,10 +13,10 @@ def get_data():
     # ds1 = ds1.dropna(axis=0, how='any')
     ds1 = ds1.dropna(axis=0, subset = ['NP_Cya_bio'])
     
-    ds2 = ds1.drop(['Station', 'Stratum','Date','StationID','Time'], axis=1)
+    ds2 = ds1.drop(['Station', 'Stratum','Date','StationID','Time', 'Depth'], axis=1)
 
     # ds2
-    ds2['Depth'] = ds1['Depth'].astype(str).str.extract('([-+]?\d*\.\d+|\d+)').astype(float)
+    #ds2['Depth'] = ds1['Depth'].astype(str).str.extract('([-+]?\d*\.\d+|\d+)').astype(float)
     ds2['TP'] = ds1['TP'].astype(str).str.extract('([-+]?\d*\.\d+|\d+)').astype(float)
     ds2['Cl'] = ds1['Cl'].astype(str).str.extract('([-+]?\d*\.\d+|\d+)').astype(float)
     ds2['DP'] = ds1['DP'].astype(str).str.extract('([-+]?\d*\.\d+|\d+)').astype(float)
@@ -25,20 +25,30 @@ def get_data():
     ds2['Chla'] = ds1['Chla'].astype(str).str.extract('([-+]?\d*\.\d+|\d+)').astype(float)
     ds2['Secchi'] = ds1['Secchi'].astype(str).str.extract('([-+]?\d*\.\d+|\d+)').astype(float)
     ds2['N:P'] = ((ds2['TN']*1e-3)/14.007)/((ds2['TP']*1e-6)/30.974) #for TN in ds2['TN'] for TP in ds2['TP']]
-    ds2['date'] = ds1['Date'].astype(str).str.extract('(\d+)').astype(int) # This is just the month number
-    ds2 = ds2.drop(['NP_Cya_bio'], axis=1)
-    ds2 = ds2.fillna(value=0)
+    ds2['Month'] = ds1['Date'].astype(str).str.extract('(\d+)').astype(int) # This is just the month number
+    
+#    ds2 = ds2.drop(['NP_Cya_bio'], axis=1)
+#    ds2 = ds2.fillna(value=0)
 
-    y = np.array(ds2['target'])
-    X = np.array(ds2.drop(['target'], axis=1))
-    for i, x in enumerate(X.T):
-        if i == 8:
-            X[:,i]=np.nan_to_num(x,nan=0,posinf=0,neginf=0)
-        else:
-            X[:,i]=np.nan_to_num(x,nan=np.nanmean(x),posinf=np.nanmean(x),neginf=np.nanmean(x))
-    # X=np.nan_to_num(X,nan=0,posinf=0,neginf=0)
-    ds2.drop(['target'], axis=1)
-    return ds2
+#    y = np.array(ds2['target'])
+#    X = np.array(ds2.drop(['target'], axis=1))
+#    for i, x in enumerate(X.T):
+#        if i == 8:
+#            X[:,i]=np.nan_to_num(x,nan=0,posinf=0,neginf=0)
+#        else:
+#            X[:,i]=np.nan_to_num(x,nan=np.nanmean(x),posinf=np.nanmean(x),neginf=np.nanmean(x))
+#    # X=np.nan_to_num(X,nan=0,posinf=0,neginf=0)
+#    ds2.drop(['target'], axis=1)
+
+    #New ds3 with missing values filled in. 
+    ds3 = ds2.copy()
+    for colname in ds3:
+        ds3[colname] = ds3[colname].fillna(ds3.groupby('Month')[colname].transform('mean'))
+
+    #Delete rows with missing values from ds2
+    ds2 = ds2.dropna(axis=0, how='any')
+
+    return ds2, ds3
     
 def split_data(X,y, num_pos):
     '''
