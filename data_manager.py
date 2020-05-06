@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from sklearn.model_selection import train_test_split
 
 
 def get_data():
@@ -39,12 +40,15 @@ def get_data():
     ds2.drop(['target'], axis=1)
     return ds2
     
-def split_data(X,y):
+def split_data(X,y, num_pos):
+    '''
+   Ensure there are at least num_pos samples in the testing set 
+    '''
     ytp=0
-    while ytp < 5:
+    while ytp < num_pos:
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, shuffle=True)
         y_train_pos = np.where(y_train == 1)
         y_test_pos= np.where(y_test == 1)
         ytp = len(y_test_pos[0])
-    assert len(y_test_pos[0]) >= 5, "Need at least 5 positive samples in training set"
-    return X_train, X_test, y_train, y_test,  len(y_train_pos[0])
+    assert len(y_test_pos[0]) >= num_pos, "Need at least 5 positive samples in training set"
+    return X_train, X_test, y_train, y_test
