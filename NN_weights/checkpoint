@@ -1,0 +1,2 @@
+model_checkpoint_path: "cyno_weights"
+all_model_checkpoint_paths: "cyno_weights"

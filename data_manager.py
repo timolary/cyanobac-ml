@@ -50,13 +50,13 @@ def get_data():
 
     return ds2, ds3
     
-def split_data(X,y, num_pos):
+def split_data(X,y, num_pos, test_size=.2):
     '''
    Ensure there are at least num_pos samples in the testing set 
     '''
     ytp=0
-    while ytp < num_pos:
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, shuffle=True)
+    while ytp != num_pos:
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, shuffle=True)
         y_train_pos = np.where(y_train == 1)
         y_test_pos= np.where(y_test == 1)
         ytp = len(y_test_pos[0])
