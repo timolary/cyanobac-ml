@@ -41,9 +41,10 @@ Data is imported and split (80:20). Random Forest and Extra Trees classifiers ar
 
 #### Cyanobacteria_SVM.ipynb
 
-Several SVM models with different kernels, optimized using a randomized search cross validation method from Scikit-learn.  Once optimized hyperparamters are calculated, testing is performed on each kernel to analyzer their separate performances.  Receiver operating characteristic and precision recall curves are also plotted to view performance.  
+Several SVM models with different kernels were optimized using a randomized search cross validation method from Scikit-learn using an 80/20 train/test split. Once optimized hyperparameters were calculated, testing is performed on each kernel to analyse their separate performances. Receiver operating characteristic and precision recall curves are also plotted to view performance.
 
 
 #### Cyanobacteria_NeuralNetwork.ipynb
-A nueral network is created for classifcation.  Various configurations were tested, but a 5 layer multilayer perceptron using a 60/20/20 train/validation/test split was found to give th best results.  5-fold cross validation is performed on the model using functions from the Scikit-learn library. A preliminary script was written for an expanding window timeseries forcast.
+A neural network is created for classification.  Various configurations were tested, but a 5 layer multilayer perceptron using a 60/20/20 train/validation/test split was found to give the best results.  A 20% dropout is used to reduce overfitting, and 5-fold cross validation is performed on the model using functions from the Scikit-learn library. A preliminary script was written for an expanding window time series forecast.
+
 
